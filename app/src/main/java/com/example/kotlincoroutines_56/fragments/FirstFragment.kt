@@ -9,10 +9,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.kotlincoroutines_56.R
 import kotlinx.android.synthetic.main.fragment_first.view.*
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 class FirstFragment : Fragment() {
@@ -26,11 +23,11 @@ class FirstFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_first, container, false)
 
-        scope.launch {
-            Log.d("Coroutine", this.coroutineContext.toString())
-            launch {
-                Log.d("Coroutine", this.coroutineContext.toString())
-            }
+        GlobalScope.launch {
+           while (true){
+               delay(1000L)
+               Log.d("Coroutine", "Running...")
+           }
         }
 
         view.buttonGo.setOnClickListener {
@@ -38,6 +35,26 @@ class FirstFragment : Fragment() {
         }
 
         return view
+    }
+
+    override fun onPause() {
+        Log.d("Coroutine", "onPause")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Log.d("Coroutine", "onStop")
+        super.onStop()
+    }
+
+    override fun onResume() {
+        Log.d("Coroutine", "onResume")
+        super.onResume()
+    }
+
+    override fun onDestroy() {
+        Log.d("Coroutine", "onDestroy")
+        super.onDestroy()
     }
 
 

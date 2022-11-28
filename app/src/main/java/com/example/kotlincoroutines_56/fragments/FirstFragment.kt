@@ -24,19 +24,12 @@ class FirstFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_first, container, false)
 
-        runBlocking {
-
-            GlobalScope.launch {
-                Log.d("Coroutine", "Coroutine 1")
-                delay(5000L)
-            }
-
-            GlobalScope.launch {
-                Log.d("Coroutine", "Coroutine 2")
-                delay(5000L)
+        GlobalScope.launch(Dispatchers.IO) {
+            Log.d("Coroutine", this.coroutineContext.toString())
+            withContext(Dispatchers.Main){
+                Log.d("Coroutine", this.coroutineContext.toString())
             }
         }
-        Log.d("Coroutine", "runBlocking Completed")
 
         view.buttonGo.setOnClickListener {
             findNavController().navigate(R.id.action_firstFragment_to_secondFragment)

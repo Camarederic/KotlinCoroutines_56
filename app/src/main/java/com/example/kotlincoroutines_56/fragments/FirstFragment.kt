@@ -15,7 +15,7 @@ import kotlinx.coroutines.*
 
 class FirstFragment : Fragment() {
 
-    private val scope = CoroutineScope(Dispatchers.IO + CoroutineName("MyScope"))
+    private val scope = CoroutineScope(CoroutineName("MyScope"))
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,11 +24,29 @@ class FirstFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_first, container, false)
 
-        lifecycleScope.launch {
-           while (true){
-               delay(1000L)
-               Log.d("Coroutine", "Running...")
-           }
+        val mainJob = scope.launch {
+            val job1 = launch {
+                while (true){
+                    yield()
+                    Log.d("Coroutine", "Job 1 running...")
+                }
+            }
+
+            val job2 = launch {
+                Log.d("Coroutine", "Job 2 running...")
+            }
+
+            delay(1000L)
+            Log.d("Coroutine", "Canceling...")
+            job2.cancelAndJoin()
+            Log.d("Coroutine", "Job 2 canceled...")
+        }
+
+        runBlocking {
+            delay(2000L)
+            Log.d("Coroutine", "Canceling...")
+            mainJob.cancelAndJoin()
+            Log.d("Coroutine", "Main Job CANCELLED")
         }
 
         view.buttonGo.setOnClickListener {
@@ -38,25 +56,7 @@ class FirstFragment : Fragment() {
         return view
     }
 
-    override fun onPause() {
-        Log.d("Coroutine", "onPause")
-        super.onPause()
-    }
 
-    override fun onStop() {
-        Log.d("Coroutine", "onStop")
-        super.onStop()
-    }
-
-    override fun onResume() {
-        Log.d("Coroutine", "onResume")
-        super.onResume()
-    }
-
-    override fun onDestroy() {
-        Log.d("Coroutine", "onDestroy")
-        super.onDestroy()
-    }
 
 
 }
